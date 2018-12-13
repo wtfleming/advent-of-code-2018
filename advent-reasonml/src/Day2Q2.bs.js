@@ -21,7 +21,7 @@ function differsByOne(l, r) {
   return match === 1;
 }
 
-function doFooFindCorrectIds(x, l) {
+function findCorrectIds(x, l) {
   var result = Belt_List.keep(l, (function (a) {
           if (a.length > 0) {
             return differsByOne(x, a);
@@ -43,13 +43,13 @@ function doFooFindCorrectIds(x, l) {
   }
 }
 
-function doFindCorrectIds(_l, acc) {
+function doFindCorrectIds(acc, _l) {
   while(true) {
     var l = _l;
     if (l) {
       var t = l[1];
       if (Belt_List.length(t) > 0) {
-        var match = doFooFindCorrectIds(l[0], t);
+        var match = findCorrectIds(l[0], t);
         var match$1 = match[0];
         if (match$1 !== undefined) {
           var match$2 = match[1];
@@ -75,20 +75,15 @@ function doFindCorrectIds(_l, acc) {
   };
 }
 
-function findCorrectIds(l) {
-  return doFindCorrectIds($$Array.to_list(l), /* tuple */[
-              "",
-              ""
-            ]);
-}
-
-var result = findCorrectIds(Fs.readFileSync("./src/day-2-input.txt", "utf8").split("\n"));
+var result = doFindCorrectIds(/* tuple */[
+      "",
+      ""
+    ], $$Array.to_list(Fs.readFileSync("./src/day-2-input.txt", "utf8").split("\n")));
 
 console.log(result);
 
 exports.differsByOne = differsByOne;
-exports.doFooFindCorrectIds = doFooFindCorrectIds;
-exports.doFindCorrectIds = doFindCorrectIds;
 exports.findCorrectIds = findCorrectIds;
+exports.doFindCorrectIds = doFindCorrectIds;
 exports.result = result;
 /* result Not a pure module */

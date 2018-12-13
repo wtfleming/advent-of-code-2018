@@ -17,18 +17,14 @@ let differsByOne = (l: string, r: string) => {
   };
 };
 
-let doFooFindCorrectIds = (x: string, l: list(string)) => {
+let findCorrectIds = (x: string, l: list(string)) => {
   let result =
-    Belt.List.keep(
-      l,
-      a => {
-        ();
-        if (Js.String.length(a) > 0) {
-          differsByOne(x, a);
-        } else {
-          false;
-        };
-      },
+    Belt.List.keep(l, a =>
+      if (Js.String.length(a) > 0) {
+        differsByOne(x, a);
+      } else {
+        false;
+      }
     );
 
   switch (Belt.List.size(result)) {
@@ -37,25 +33,24 @@ let doFooFindCorrectIds = (x: string, l: list(string)) => {
   };
 };
 
-let rec doFindCorrectIds = (l: list(string), acc) =>
+let rec doFindCorrectIds = (acc, l: list(string)) =>
   switch (l) {
   | [] => acc
   | [h, ...t] =>
     if (Belt.List.length(t) > 0) {
-      switch (doFooFindCorrectIds(h, t)) {
+      switch (findCorrectIds(h, t)) {
       | (Some(left), Some(right)) => (left, right)
-      | _ => doFindCorrectIds(t, acc)
+      | _ => doFindCorrectIds(acc, t)
       };
     } else {
       acc;
     }
   };
 
-let findCorrectIds = l => doFindCorrectIds(Array.to_list(l), ("", ""));
-
 let result =
   Node.Fs.readFileAsUtf8Sync("./src/day-2-input.txt")
   |> Js.String.split("\n")
-  |> findCorrectIds;
+  |> Array.to_list
+  |> doFindCorrectIds(("", ""));
 
 Js.log(result);
